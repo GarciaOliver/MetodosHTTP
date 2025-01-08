@@ -42,12 +42,15 @@ public class mPost extends AppCompatActivity {
         btnSumar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String numero1=txtNum1.getText().toString();
-                String numero2=txtNum2.getText().toString();
+                String numero1=txtNum1.getText().toString().trim();
+                String numero2=txtNum2.getText().toString().trim();
                 con= new Conexion();
-                String respuesta=con.postRequest("http://10.0.2.2:3000/mpost",numero1,numero2);
-                txtResult.setText(respuesta);
-                Log.d("Conexion", "Respuesta: " + respuesta);
+                new Thread(() -> {
+                    Log.d("Conexion", "Datos enviados: num1=" + numero1 + ", num2=" + numero2);
+                    String respuesta = con.postRequest("http://10.0.2.2:3000/mpost", numero1, numero2);
+                    runOnUiThread(() -> txtResult.setText(respuesta));
+                    Log.d("Conexion", "Respuesta: " + respuesta);
+                }).start();
             }
         });
     }
